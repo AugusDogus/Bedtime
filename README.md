@@ -1,4 +1,6 @@
-# Bedtime
+<p align="center">
+  <img src="package/banner.png" alt="Bedtime: sleep announcements for Valheim" width="900">
+</p>
 
 A dedicated-server Valheim mod that shows how many players are in bed. Players can use vanilla clients, including consoles.
 
@@ -55,3 +57,8 @@ Inspired by the server announcements in
 independent implementation and no dependency on its code or plugins.
 
 [Development and releases](docs/DEVELOPMENT.md) · [Repository layout](docs/REPOSITORY.md)
+
+## License
+
+[MIT](LICENSE.md). Copyright (c) 2026 AugusDogus.
+Banner font notices are retained in [FONT-LICENSE.txt](assets/artwork/FONT-LICENSE.txt).

@@ -1,9 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-  <title>Bedtime</title>
-  <rect width="256" height="256" rx="32" fill="#17283b"/>
-  <path d="M172 38a35 35 0 1 0 40 48 32 32 0 0 1-40-48Z" fill="#f1dfb7"/>
-  <path d="M60 42v14m-7-7h14m35 16v10m-5-5h10" stroke="#f1dfb7" stroke-width="4" stroke-linecap="round"/>
-  <path d="M45 135v75m166-60v60M45 185h166" fill="none" stroke="#d6a768" stroke-width="12" stroke-linecap="round"/>
-  <rect x="55" y="143" width="43" height="29" rx="9" fill="#f1dfb7"/>
-  <path d="M111 137h64a30 30 0 0 1 30 30v5h-94Z" fill="#719ca1"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title description">
+  <title id="title">Bedtime</title>
+  <desc id="description">A bed beneath a crescent moon, in cream, sage, and brass on forest green.</desc>
+  <rect width="256" height="256" fill="#213d36"/>
+  <g id="bedtime-emblem">
+    <circle cx="128" cy="128" r="110" fill="none" stroke="#78978a" stroke-width="2" opacity="0.65"/>
+    <path d="M169 39a32 32 0 1 0 33 42 29 29 0 0 1-33-42Z" fill="#f1dfb7"/>
+    <path d="M73 59v16m-8-8h16m24 19v10m-5-5h10" fill="none" stroke="#a98a59" stroke-width="3" stroke-linecap="round"/>
+    <path d="M44 124h13v48h142v-27h13v53h-13v-13H57v13H44Z" fill="#a98a59"/>
+    <rect x="62" y="137" width="43" height="27" rx="7" fill="#f1dfb7"/>
+    <path d="M115 132h61l18 18v14h-79Z" fill="#b4c2b4"/>
+    <path d="M115 132h15v32h-15Z" fill="#78978a"/>
+  </g>
 </svg>

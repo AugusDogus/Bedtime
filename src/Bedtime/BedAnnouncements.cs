@@ -22,7 +22,12 @@ internal sealed class BedAnnouncements
         }
 
         string players = playerCount == 1 ? "player is" : "players are";
-        var message = new StringBuilder($"{inBed} out of {playerCount} {players} in bed.");
+        var message = new StringBuilder();
+        // Vanilla vertically centers notifications. Balance the list with blank lines
+        // above the count so it stays below the hotbar as the list grows downward.
+        if (awakePlayers.Count > 0)
+            message.Append('\n', awakePlayers.Count + 1);
+        message.Append($"{inBed} out of {playerCount} {players} in bed.");
         if (awakePlayers.Count > 0)
         {
             var names = new List<string>(awakePlayers.Count);

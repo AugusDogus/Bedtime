@@ -33,4 +33,5 @@ bullet line, in alphabetical order. Swap a sleeping and awake player within one
 sleep-update pass: the count should stay the same but the names should update.
 Verify duplicate character names appear once per player, long names remain
 readable, and multiline notifications remain visible at the client's UI scale.
+Check that the count stays below the hotbar as the awake-player list grows or shrinks.
 Names containing markup or line breaks should display as plain, single-line names.

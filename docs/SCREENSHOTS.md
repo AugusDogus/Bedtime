@@ -1,7 +1,8 @@
 # README screenshots
 
 Captured on October 4, 2026, using the installed Linux Valheim client and
-Bedtime's announcement formatter from commit `7346252`.
+Bedtime's announcement formatter, including the leading blank lines that keep
+the count below the hotbar.
 
 The game ran on a hidden Gamescope display at 1920 × 1080. A Bubblewrap sandbox
 hid the normal home directory, used disposable local character/world saves,
@@ -20,6 +21,11 @@ release package.
   the same frame, showing the count and awake-player list.
 - `package/screenshots/all-in-bed.webp`: native-resolution, lossless crop of
   the staged all-in-bed notification.
+
+The count's first glyph started at approximately y=131 with both two and nine
+awake players, matching the all-in-bed notification. Before the padding, the
+two-player list started at y=95 and overlapped the hotbar. These positions were
+measured from the native text mesh at the captured resolution and UI scale.
 
 These images demonstrate appearance at this resolution and UI scale. They do
 not establish multiplayer behavior, console compatibility, or actual sleep

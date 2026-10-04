@@ -6,24 +6,8 @@ A dedicated-server Valheim mod that shows how many players are in bed. Players c
 
 ![Top-left notification: 1 out of 3 players are in bed. Not Sleeping: Bob and Charlie.](package/screenshots/not-sleeping.webp)
 
-*Staged local example with fictional player names, captured in Valheim's actual HUD.*
-
 Valheim still decides when everyone can sleep. Sitting does not count, there is
 no voting, and the mod never starts sleep or skips time.
-
-<details>
-<summary>Full in-game view and everyone-in-bed example</summary>
-
-![Bedtime's multiline notification in the top-left corner of the game.](package/screenshots/in-game.webp)
-
-When everyone is in bed, the list disappears:
-
-![Top-left notification: 3 out of 3 players are in bed.](package/screenshots/all-in-bed.webp)
-
-These are staged UI examples, not a live multiplayer session.
-[Capture details](docs/SCREENSHOTS.md).
-
-</details>
 
 ## Behavior
 

@@ -4,7 +4,7 @@
 
 A dedicated-server Valheim mod that shows how many players are in bed. Players can use vanilla clients, including consoles.
 
-![Top-left notification: 1 out of 3 players are in bed. Not Sleeping: Bob and Charlie.](package/screenshots/not-sleeping.webp)
+![Top-left notification showing the bed count and Not Sleeping list.](package/screenshots/not-sleeping.webp)
 
 Valheim still decides when everyone can sleep. Sitting does not count, there is
 no voting, and the mod never starts sleep or skips time.

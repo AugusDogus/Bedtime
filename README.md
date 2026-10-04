@@ -14,7 +14,7 @@ no voting, and the mod never starts sleep or skips time.
 - Shows a top-left notification with the bed count and a bulleted list of players
   not in bed. Names appear in alphabetical order; the list disappears when everyone is in bed.
 - Updates when the count or awake-player list changes, including bed swaps,
-  joins, and disconnects.
+  joins, and disconnects. With the list disabled, only count changes trigger announcements.
 - Uses Valheim's existing sleep-update pass, currently every two seconds.
   Bedtime adds no timer or per-frame update loop.
 - Counts the same active player characters as vanilla's sleep check. Characters
@@ -36,6 +36,19 @@ For the community-valheim-tools container, place the DLL in the persistent
 
 Installing Bedtime on a client has no effect. To uninstall, remove its DLL and
 restart the server. It writes no world or player data.
+
+## Configuration
+
+After the first start, edit `BepInEx/config/augusdogus.mods.Bedtime.cfg` on the server:
+
+```ini
+[Announcements]
+ShowAwakePlayers = true
+```
+
+Set `ShowAwakePlayers = false` to hide the `Not Sleeping:` heading and player list.
+Only the count remains, for example `1 out of 3 players are in bed`.
+The list is enabled by default. Restart the server after changing the setting.
 
 ## Build and verification
 

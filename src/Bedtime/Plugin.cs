@@ -13,6 +13,7 @@ public sealed class Plugin : BaseUnityPlugin
 
     private readonly BedAnnouncements _announcements = new();
     private readonly Harmony _harmony = new(PluginId);
+    private bool _showAwakePlayers = true;
     private static Plugin? _instance;
 
     private void Awake()
@@ -20,6 +21,8 @@ public sealed class Plugin : BaseUnityPlugin
         _instance = this;
         try
         {
+            _showAwakePlayers = Config.Bind("Announcements", "ShowAwakePlayers", true,
+                "Show the Not Sleeping list below the bed count. Disable for count-only announcements. Restart the server after changing this setting.").Value;
             _harmony.PatchAll(typeof(SleepUpdatePatch));
             Logger.LogInfo("Bedtime loaded. Bed announcements run on dedicated servers; vanilla sleep rules are unchanged.");
         }
@@ -62,7 +65,7 @@ public sealed class Plugin : BaseUnityPlugin
                     awakePlayers.Add(character.GetString(ZDOVars.s_playerName, "Unknown player"));
             }
 
-            string? message = _announcements.Update(inBed, awakePlayers);
+            string? message = _announcements.Update(inBed, awakePlayers, _showAwakePlayers);
             if (message != null)
                 rpc.InvokeRoutedRPC(ZRoutedRpc.Everybody, "ShowMessage", (int)MessageHud.MessageType.TopLeft, message);
         }

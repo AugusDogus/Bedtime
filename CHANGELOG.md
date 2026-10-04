@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add the server setting `Announcements.ShowAwakePlayers` to hide the awake-player list.
+- Remove the period after the bed count.
 - Keep the bed count below the hotbar as the awake-player list grows downward.
 - List players not in bed on separate bulleted lines below the bed count.
 - Update announcements when awake players change, even if the count stays the same.

@@ -1,8 +1,8 @@
 # README screenshots
 
 Captured on October 4, 2026, using the installed Linux Valheim client and
-Bedtime's announcement formatter, including the leading blank lines that keep
-the count below the hotbar.
+Bedtime's announcement formatter from commit `342ad23`, including the leading
+blank lines that keep the count below the hotbar.
 
 The game ran on a hidden Gamescope display at 1920 × 1080. A Bubblewrap sandbox
 hid the normal home directory, used disposable local character/world saves,

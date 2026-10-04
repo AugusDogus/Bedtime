@@ -7,11 +7,45 @@ namespace Bedtime.Tests;
 public sealed class BedAnnouncementsTests
 {
     [TestMethod]
+    public void CountOnlyOmitsTheListAndItsPadding()
+    {
+        var announcements = new BedAnnouncements();
+
+        Assert.AreEqual("1 out of 3 players are in bed",
+            announcements.Update(1, new[] { "Bob", "Charlie" }, showAwakePlayers: false));
+    }
+
+    [TestMethod]
+    public void CountOnlyIgnoresNameChangesButReportsCountChanges()
+    {
+        var announcements = new BedAnnouncements();
+        announcements.Update(1, new[] { "Bob" }, showAwakePlayers: false);
+
+        Assert.IsNull(announcements.Update(1, new[] { "Charlie" }, showAwakePlayers: false));
+        Assert.AreEqual("1 out of 3 players are in bed",
+            announcements.Update(1, new[] { "Bob", "Charlie" }, showAwakePlayers: false));
+        Assert.AreEqual("3 out of 3 players are in bed",
+            announcements.Update(3, Array.Empty<string>(), showAwakePlayers: false));
+    }
+
+    [TestMethod]
+    public void CountOnlyReportsTheLastSleeperLeavingThenStaysQuiet()
+    {
+        var announcements = new BedAnnouncements();
+        Assert.IsNull(announcements.Update(0, new[] { "Bob" }, showAwakePlayers: false));
+        announcements.Update(1, Array.Empty<string>(), showAwakePlayers: false);
+
+        Assert.AreEqual("0 out of 1 player is in bed",
+            announcements.Update(0, new[] { "Bob" }, showAwakePlayers: false));
+        Assert.IsNull(announcements.Update(0, new[] { "Bob" }, showAwakePlayers: false));
+    }
+
+    [TestMethod]
     public void ListsAwakePlayersUnderTheCount()
     {
         var announcements = new BedAnnouncements();
 
-        Assert.AreEqual("\n\n\n1 out of 3 players are in bed.\nNot Sleeping:\n• Bob\n• Charlie",
+        Assert.AreEqual("\n\n\n1 out of 3 players are in bed\nNot Sleeping:\n• Bob\n• Charlie",
             announcements.Update(1, new[] { "Charlie", "Bob" }));
     }
 
@@ -38,7 +72,7 @@ public sealed class BedAnnouncementsTests
     public void CombinesSimultaneousBedEntriesIntoOneAnnouncement()
     {
         var announcements = new BedAnnouncements();
-        Assert.AreEqual("\n\n2 out of 3 players are in bed.\nNot Sleeping:\n• Charlie",
+        Assert.AreEqual("\n\n2 out of 3 players are in bed\nNot Sleeping:\n• Charlie",
             announcements.Update(2, new[] { "Charlie" }));
     }
 
@@ -48,7 +82,7 @@ public sealed class BedAnnouncementsTests
         var announcements = new BedAnnouncements();
         announcements.Update(1, new[] { "Bob" });
 
-        Assert.AreEqual("2 out of 2 players are in bed.",
+        Assert.AreEqual("2 out of 2 players are in bed",
             announcements.Update(2, Array.Empty<string>()));
     }
 
@@ -58,7 +92,7 @@ public sealed class BedAnnouncementsTests
         var announcements = new BedAnnouncements();
         announcements.Update(1, new[] { "Bob" });
 
-        Assert.AreEqual("\n\n1 out of 2 players are in bed.\nNot Sleeping:\n• Alice",
+        Assert.AreEqual("\n\n1 out of 2 players are in bed\nNot Sleeping:\n• Alice",
             announcements.Update(1, new[] { "Alice" }));
     }
 
@@ -68,9 +102,9 @@ public sealed class BedAnnouncementsTests
         var announcements = new BedAnnouncements();
         announcements.Update(2, Array.Empty<string>());
 
-        Assert.AreEqual("\n\n1 out of 2 players are in bed.\nNot Sleeping:\n• Bob",
+        Assert.AreEqual("\n\n1 out of 2 players are in bed\nNot Sleeping:\n• Bob",
             announcements.Update(1, new[] { "Bob" }));
-        Assert.AreEqual("\n\n\n0 out of 2 players are in bed.\nNot Sleeping:\n• Alice\n• Bob",
+        Assert.AreEqual("\n\n\n0 out of 2 players are in bed\nNot Sleeping:\n• Alice\n• Bob",
             announcements.Update(0, new[] { "Alice", "Bob" }));
         Assert.IsNull(announcements.Update(0, new[] { "Alice", "Bob" }));
     }
@@ -81,9 +115,9 @@ public sealed class BedAnnouncementsTests
         var announcements = new BedAnnouncements();
         announcements.Update(1, new[] { "Bob" });
 
-        Assert.AreEqual("\n\n\n1 out of 3 players are in bed.\nNot Sleeping:\n• Bob\n• Charlie",
+        Assert.AreEqual("\n\n\n1 out of 3 players are in bed\nNot Sleeping:\n• Bob\n• Charlie",
             announcements.Update(1, new[] { "Bob", "Charlie" }));
-        Assert.AreEqual("\n\n1 out of 2 players are in bed.\nNot Sleeping:\n• Bob",
+        Assert.AreEqual("\n\n1 out of 2 players are in bed\nNot Sleeping:\n• Bob",
             announcements.Update(1, new[] { "Bob" }));
     }
 
@@ -93,10 +127,10 @@ public sealed class BedAnnouncementsTests
         var announcements = new BedAnnouncements();
         announcements.Update(1, new[] { "Bob" });
 
-        Assert.AreEqual("\n\n0 out of 1 player is in bed.\nNot Sleeping:\n• Bob",
+        Assert.AreEqual("\n\n0 out of 1 player is in bed\nNot Sleeping:\n• Bob",
             announcements.Update(0, new[] { "Bob" }));
         Assert.IsNull(announcements.Update(0, Array.Empty<string>()));
-        Assert.AreEqual("1 out of 1 player is in bed.",
+        Assert.AreEqual("1 out of 1 player is in bed",
             announcements.Update(1, Array.Empty<string>()));
     }
 
@@ -107,7 +141,7 @@ public sealed class BedAnnouncementsTests
         announcements.Update(1, new[] { "Bob" });
         announcements.Clear();
 
-        Assert.AreEqual("\n\n1 out of 2 players are in bed.\nNot Sleeping:\n• Bob",
+        Assert.AreEqual("\n\n1 out of 2 players are in bed\nNot Sleeping:\n• Bob",
             announcements.Update(1, new[] { "Bob" }));
     }
 
@@ -116,7 +150,7 @@ public sealed class BedAnnouncementsTests
     {
         var announcements = new BedAnnouncements();
 
-        Assert.AreEqual("\n\n\n\n1 out of 4 players are in bed.\nNot Sleeping:\n• Björn\n• Bob\n• Bob",
+        Assert.AreEqual("\n\n\n\n1 out of 4 players are in bed\nNot Sleeping:\n• Björn\n• Bob\n• Bob",
             announcements.Update(1, new[] { "Bob", "Björn", "Bob" }));
     }
 
@@ -125,7 +159,7 @@ public sealed class BedAnnouncementsTests
     {
         var announcements = new BedAnnouncements();
 
-        Assert.AreEqual("\n\n1 out of 2 players are in bed.\nNot Sleeping:\n• ‹b›Bob‹/b› ＄name ＼n",
+        Assert.AreEqual("\n\n1 out of 2 players are in bed\nNot Sleeping:\n• ‹b›Bob‹/b› ＄name ＼n",
             announcements.Update(1, new[] { "<b>Bob</b>\n$name\t\\n" }));
     }
 
@@ -134,7 +168,7 @@ public sealed class BedAnnouncementsTests
     {
         var announcements = new BedAnnouncements();
 
-        Assert.AreEqual("\n\n\n1 out of 3 players are in bed.\nNot Sleeping:\n• Unknown player\n• Unknown player",
+        Assert.AreEqual("\n\n\n1 out of 3 players are in bed\nNot Sleeping:\n• Unknown player\n• Unknown player",
             announcements.Update(1, new[] { "", " \r\n" }));
     }
 }

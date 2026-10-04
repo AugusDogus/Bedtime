@@ -30,6 +30,12 @@ public sealed class GameCompatibilityTests
             instruction.Operand is FieldReference { Name: "s_inBed", DeclaringType.FullName: "ZDOVars" }),
             "Vanilla's bed flag changed. Review which state Bedtime reads before releasing.");
 
+        TypeDefinition player = game.MainModule.Types.Single(type => type.FullName == "Player");
+        var getName = player.Methods.Single(method => method.Name == "GetPlayerName");
+        Assert.IsTrue(getName.Body.Instructions.Any(instruction =>
+            instruction.Operand is FieldReference { Name: "s_playerName", DeclaringType.FullName: "ZDOVars" }),
+            "Vanilla's character-name field changed. Review the awake-player list before releasing.");
+
         TypeDefinition hud = game.MainModule.Types.Single(type => type.FullName == "MessageHud");
         var receiver = hud.Methods.Single(method => method.Name == "RPC_ShowMessage");
         CollectionAssert.AreEqual(new[] { "System.Int64", "System.Int32", "System.String" },

@@ -4,20 +4,28 @@
 
 A dedicated-server Valheim mod that shows how many players are in bed. Players can use vanilla clients, including consoles.
 
-> 1 out of 3 players are in bed.
+```text
+1 out of 3 players are in bed.
+Not Sleeping:
+• Bob
+• Charlie
+```
 
 Valheim still decides when everyone can sleep. Sitting does not count, there is
 no voting, and the mod never starts sleep or skips time.
 
 ## Behavior
 
-- Shows a compact top-left notification when the bed count changes.
-- Updates the count when someone leaves bed, joins, or disconnects.
+- Shows a top-left notification with the bed count and a bulleted list of players
+  not in bed. Names appear in alphabetical order; the list disappears when everyone is in bed.
+- Updates when the count or awake-player list changes, including bed swaps,
+  joins, and disconnects.
 - Uses Valheim's existing sleep-update pass, currently every two seconds.
   Bedtime adds no timer or per-frame update loop.
 - Counts the same active player characters as vanilla's sleep check. Characters
   still loading or respawning may not be counted until the game registers them.
 - Does not repeat unchanged announcements, and stays quiet during sleep.
+  The list uses the normal notification fade time, so large groups may be hard to read.
 - No client installation or configuration is required.
 
 ## Installation

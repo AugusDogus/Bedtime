@@ -53,13 +53,16 @@ public sealed class Plugin : BaseUnityPlugin
             // Use the same active characters and bed flag as vanilla's sleep check.
             List<ZDO> characters = network.GetAllCharacterZDOS();
             int inBed = 0;
+            var awakePlayers = new List<string>();
             foreach (ZDO character in characters)
             {
                 if (character.GetBool(ZDOVars.s_inBed))
                     inBed++;
+                else
+                    awakePlayers.Add(character.GetString(ZDOVars.s_playerName, "Unknown player"));
             }
 
-            string? message = _announcements.Update(inBed, characters.Count);
+            string? message = _announcements.Update(inBed, awakePlayers);
             if (message != null)
                 rpc.InvokeRoutedRPC(ZRoutedRpc.Everybody, "ShowMessage", (int)MessageHud.MessageType.TopLeft, message);
         }

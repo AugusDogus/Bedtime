@@ -11,16 +11,18 @@ no voting, and the mod never starts sleep or skips time.
 
 ## Behavior
 
-- Shows a top-left notification with the bed count and a bulleted list of players
-  not in bed. Names appear in alphabetical order; the list disappears when everyone is in bed.
-- Updates when the count or awake-player list changes, including bed swaps,
-  joins, and disconnects. With the list disabled, only count changes trigger announcements.
+- Shows `X of Y players asleep` in a top-left notification, with an optional
+  alphabetical list of players not in bed.
+- Refreshes the notification every two seconds while someone is waiting in bed,
+  including the latest count and awake-player list.
+- Shows `Everyone went to sleep. Sweet dreams!` once when everyone is in bed.
+- Stays silent with only one active player, when nobody is in bed, and during sleep.
 - Uses Valheim's existing sleep-update pass, currently every two seconds.
   Bedtime adds no timer or per-frame update loop.
 - Counts the same active player characters as vanilla's sleep check. Characters
   still loading or respawning may not be counted until the game registers them.
-- Does not repeat unchanged announcements, and stays quiet during sleep.
-  The list uses the normal notification fade time, so large groups may be hard to read.
+- Uses the normal notification queue and fade. Other game messages can interrupt
+  the display, and repeated sleep messages also appear in the game's message log.
 - No client installation or configuration is required.
 
 ## Installation
@@ -47,7 +49,7 @@ ShowAwakePlayers = true
 ```
 
 Set `ShowAwakePlayers = false` to hide the `Not Sleeping:` heading and player list.
-Only the count remains, for example `1 out of 3 players are in bed`.
+Only the count remains, for example `1 of 3 players asleep`.
 The list is enabled by default. Restart the server after changing the setting.
 
 ## Build and verification

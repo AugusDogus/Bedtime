@@ -22,6 +22,14 @@ public sealed class GameCompatibilityTests
         Assert.AreEqual("System.Void", update.ReturnType.FullName);
         Assert.AreEqual("System.Boolean", gameType.Fields.Single(field => field.Name == "m_sleeping").FieldType.FullName);
 
+        var gameStart = gameType.Methods.Single(method => method.Name == "Start");
+        var sleepSchedule = gameStart.Body.Instructions.Single(instruction =>
+            instruction.Operand is string name && name == "UpdateSleeping");
+        Assert.AreEqual(2f, sleepSchedule.Next?.Operand);
+        Assert.AreEqual(2f, sleepSchedule.Next?.Next?.Operand,
+            "Vanilla's sleep-update interval changed. Review notification refresh timing before releasing.");
+        Assert.IsTrue(sleepSchedule.Next?.Next?.Next?.Operand is MethodReference { Name: "InvokeRepeating" });
+
         var sleepCheck = gameType.Methods.Single(method => method.Name == "EverybodyIsTryingToSleep");
         Assert.IsTrue(sleepCheck.Body.Instructions.Any(instruction =>
             instruction.Operand is MethodReference { Name: "GetAllCharacterZDOS", DeclaringType.FullName: "ZNet" }),

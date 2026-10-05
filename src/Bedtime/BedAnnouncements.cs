@@ -6,30 +6,33 @@ namespace Bedtime;
 
 internal sealed class BedAnnouncements
 {
-    private int _inBed;
-    private string? _lastMessage;
+    private bool _announcedEveryoneAsleep;
 
     public string? Update(int inBed, IReadOnlyCollection<string> awakePlayers, bool showAwakePlayers = true)
     {
-        bool hadSleepers = _inBed > 0;
-        _inBed = inBed;
-
         int playerCount = inBed + awakePlayers.Count;
-        if (playerCount == 0 || (!hadSleepers && inBed == 0))
+        if (playerCount <= 1 || inBed == 0)
         {
-            _lastMessage = null;
+            Clear();
             return null;
         }
 
-        string players = playerCount == 1 ? "player is" : "players are";
-        bool hasList = showAwakePlayers && awakePlayers.Count > 0;
+        if (awakePlayers.Count == 0)
+        {
+            if (_announcedEveryoneAsleep)
+                return null;
+            _announcedEveryoneAsleep = true;
+            return "Everyone went to sleep. Sweet dreams!";
+        }
+
+        _announcedEveryoneAsleep = false;
         var message = new StringBuilder();
         // Vanilla vertically centers notifications. Balance the list with blank lines
         // above the count so it stays below the hotbar as the list grows downward.
-        if (hasList)
+        if (showAwakePlayers)
             message.Append('\n', awakePlayers.Count + 1);
-        message.Append($"{inBed} out of {playerCount} {players} in bed");
-        if (hasList)
+        message.Append($"{inBed} of {playerCount} players asleep");
+        if (showAwakePlayers)
         {
             var names = new List<string>(awakePlayers.Count);
             foreach (string name in awakePlayers)
@@ -41,12 +44,8 @@ internal sealed class BedAnnouncements
                 message.Append("\n• ").Append(name);
         }
 
-        string text = message.ToString();
-        if (text == _lastMessage)
-            return null;
-
-        _lastMessage = text;
-        return text;
+        // Repeating on vanilla's sleep-update pass refreshes the client's fade.
+        return message.ToString();
     }
 
     private static string DisplayName(string name)
@@ -72,7 +71,6 @@ internal sealed class BedAnnouncements
 
     public void Clear()
     {
-        _inBed = 0;
-        _lastMessage = null;
+        _announcedEveryoneAsleep = false;
     }
 }

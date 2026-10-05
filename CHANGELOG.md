@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Refresh the top-left notification every sleep check while players wait in bed.
+- Use `X of Y players asleep` and announce `Everyone went to sleep. Sweet dreams!` once when everyone is in bed.
+- Suppress announcements with fewer than two active players or nobody in bed.
+
 ## 1.0.0
 
 - Announce the current bed count in compact top-left notifications to all players, including vanilla clients.

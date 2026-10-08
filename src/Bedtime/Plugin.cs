@@ -10,7 +10,7 @@ namespace Bedtime;
 public sealed class Plugin : BaseUnityPlugin
 {
     public const string PluginId = "augusdogus.mods.Bedtime";
-    public const string PluginVersion = "1.0.0";
+    public const string PluginVersion = "1.1.0";
 
     private readonly BedAnnouncements _announcements = new();
     private readonly Harmony _harmony = new(PluginId);

@@ -1,6 +1,6 @@
 {
   "name": "Bedtime",
-  "version_number": "1.0.0",
+  "version_number": "1.1.0",
   "website_url": "https://github.com/AugusDogus/Bedtime",
   "description": "Server-only bed announcements for vanilla and modded clients. Shows how many players are in bed. Keeps vanilla sleep rules.",
   "dependencies": [

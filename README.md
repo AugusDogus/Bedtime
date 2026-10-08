@@ -13,17 +13,33 @@ no voting, and the mod never starts sleep or skips time.
 
 - Shows `X of Y players asleep` in a top-left notification, with an optional
   alphabetical list of players not in bed.
-- Refreshes the notification every two seconds while someone is waiting in bed,
-  including the latest count and awake-player list.
+- Announces changes to the count or displayed awake-player list. Unchanged
+  status is not repeated automatically.
+- Type `zzz` in normal chat to repeat the current sleep status for everyone
+  on the next sleep-update pass. Requests share a five-second cooldown.
 - Shows `Everyone went to sleep. Sweet dreams!` once when everyone is in bed.
 - Stays silent with only one active player, when nobody is in bed, and during sleep.
 - Uses Valheim's existing sleep-update pass, currently every two seconds.
   Bedtime adds no timer or per-frame update loop.
 - Counts the same active player characters as vanilla's sleep check. Characters
   still loading or respawning may not be counted until the game registers them.
-- Uses the normal notification queue and fade. Other game messages can interrupt
-  the display, and repeated sleep messages also appear in the game's message log.
+- Uses the normal notification queue and fade. Each announcement appears in
+  the game's message log. Other game messages can interrupt the display.
 - No client installation or configuration is required.
+
+## Repeat the announcement
+
+Type `zzz` in normal chat when someone is waiting in bed. Bedtime shows the
+current count and optional awake list to everyone within about two seconds.
+Any message containing only three or more Zs works, such as `zzzz`, `ZZZZZ`, or `zZZZzzZ`.
+Unchanged status stays quiet until requested again or a player state changes.
+
+Use plain `zzz`, without a slash. Vanilla rejects unknown slash commands such as `/zzz`
+before sending anything to the server. You will see your own `zzz` chat echo;
+Bedtime stops it from being forwarded to other players. Ordinary chat is unchanged.
+The command shares a five-second server-wide cooldown and stays silent when
+nobody is in bed, only one active player remains, or sleep is already underway.
+It requires the client's normal chat communication permissions.
 
 ## Installation
 
@@ -65,7 +81,7 @@ bun run typecheck
 bun test tests/
 ```
 
-Requires .NET SDK 8 and Bun 1.4.1+. Output: `artifacts/Bedtime-1.0.0.zip`.
+Requires .NET SDK 8 and Bun 1.4.1+. Output: `artifacts/Bedtime-1.1.0.zip`.
 Tests cover announcement transitions and the installed game's bed/HUD contracts.
 See [manual multiplayer checks](docs/TESTING.md) for verification with real clients.
 

@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 1.1.0
 
-- Refresh the top-left notification every sleep check while players wait in bed.
+- Add `zzz` in normal chat to repeat the current top-left status for everyone. Accept three or more Zs in any mix of uppercase and lowercase, with a five-second shared cooldown.
 - Use `X of Y players asleep` and announce `Everyone went to sleep. Sweet dreams!` once when everyone is in bed.
 - Suppress announcements with fewer than two active players or nobody in bed.
 

@@ -24,6 +24,8 @@ release package.
 - `package/screenshots/all-in-bed.webp`: native-resolution, lossless crop of
   the staged all-in-bed notification.
 
+These images still match the current top-left text and layout. Current announcements
+are sent on status changes or `zzz` requests instead of periodic refreshes.
 These images demonstrate appearance at this resolution and UI scale. They do
 not establish multiplayer behavior, console compatibility, or actual sleep
 transitions. Valheim's game artwork remains its respective owners' material.

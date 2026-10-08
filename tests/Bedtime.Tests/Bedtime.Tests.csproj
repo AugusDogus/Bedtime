@@ -11,6 +11,12 @@
     <PackageReference Include="MSTest.TestAdapter" Version="3.6.4" />
     <PackageReference Include="MSTest.TestFramework" Version="3.6.4" />
     <Reference Include="$(BepInExDir)/core/Mono.Cecil.dll" />
+    <Reference Include="$(ManagedDir)/assembly_valheim.dll" ExternallyResolved="true" />
+    <Reference Include="$(ManagedDir)/assembly_utils.dll" ExternallyResolved="true" />
+    <Reference Include="$(ManagedDir)/UnityEngine.CoreModule.dll" />
+    <Reference Include="$(ManagedDir)/Splatform.dll" />
     <Compile Include="../../src/Bedtime/BedAnnouncements.cs" Link="BedAnnouncements.cs" />
+    <Compile Include="../../src/Bedtime/ReplayRequest.cs" Link="ReplayRequest.cs" />
+    <Compile Include="../../src/Bedtime/ChatCommand.cs" Link="ChatCommand.cs" />
   </ItemGroup>
 </Project>

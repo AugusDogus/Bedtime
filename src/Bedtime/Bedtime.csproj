@@ -12,6 +12,7 @@
   <ItemGroup>
     <!-- Unity supplies the game's transitive runtime dependencies. -->
     <Reference Include="$(ManagedDir)/assembly_valheim.dll" Private="false" ExternallyResolved="true" />
+    <Reference Include="$(ManagedDir)/assembly_utils.dll" Private="false" ExternallyResolved="true" />
     <Reference Include="$(ManagedDir)/UnityEngine*.dll" Private="false" />
     <Reference Include="$(BepInExDir)/core/BepInEx.dll" Private="false" />
     <Reference Include="$(BepInExDir)/core/0Harmony.dll" Private="false" />

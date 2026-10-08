@@ -33,7 +33,7 @@ public sealed class BedAnnouncementsTests
     }
 
     [TestMethod]
-    public void CountOnlyOmitsTheListAndItsPadding()
+    public void CountOnlyOmitsTheList()
     {
         var announcements = new BedAnnouncements();
 
@@ -42,13 +42,12 @@ public sealed class BedAnnouncementsTests
     }
 
     [TestMethod]
-    public void CountOnlyRepeatsAndReportsCountChanges()
+    public void CountOnlySuppressesUnchangedCounts()
     {
         var announcements = new BedAnnouncements();
         announcements.Update(1, new[] { "Bob" }, showAwakePlayers: false);
 
-        Assert.AreEqual("1 of 2 players asleep",
-            announcements.Update(1, new[] { "Charlie" }, showAwakePlayers: false));
+        Assert.IsNull(announcements.Update(1, new[] { "Charlie" }, showAwakePlayers: false));
         Assert.AreEqual("1 of 3 players asleep",
             announcements.Update(1, new[] { "Bob", "Charlie" }, showAwakePlayers: false));
         Assert.AreEqual("Everyone went to sleep. Sweet dreams!",
@@ -85,15 +84,32 @@ public sealed class BedAnnouncementsTests
     }
 
     [TestMethod]
-    public void RepeatsTheCurrentStatusOnEverySleepCheck()
+    public void SuppressesIdenticalMessagesRegardlessOfPlayerOrder()
     {
         var announcements = new BedAnnouncements();
         announcements.Update(1, new[] { "Bob", "Charlie" });
 
-        Assert.AreEqual("\n\n\n1 of 3 players asleep\nNot Sleeping:\n• Bob\n• Charlie",
-            announcements.Update(1, new[] { "Bob", "Charlie" }));
-        Assert.AreEqual("\n\n\n1 of 3 players asleep\nNot Sleeping:\n• Bob\n• Charlie",
-            announcements.Update(1, new[] { "Charlie", "Bob" }));
+        Assert.IsNull(announcements.Update(1, new[] { "Bob", "Charlie" }));
+        Assert.IsNull(announcements.Update(1, new[] { "Charlie", "Bob" }));
+    }
+
+    [TestMethod]
+    public void ExplicitReplayRepeatsUnchangedStatusWithoutEnablingAutomaticRepeats()
+    {
+        var announcements = new BedAnnouncements();
+        string? initial = announcements.Update(1, new[] { "Bob" });
+        Assert.IsNotNull(initial);
+        Assert.IsNull(announcements.Update(1, new[] { "Bob" }));
+        Assert.AreEqual(initial, announcements.Update(1, new[] { "Bob" }, repeat: true));
+        Assert.IsNull(announcements.Update(1, new[] { "Bob" }));
+    }
+
+    [TestMethod]
+    public void ReplayStillStaysSilentForSoloPlayersAndNobodyInBed()
+    {
+        var announcements = new BedAnnouncements();
+        Assert.IsNull(announcements.Update(1, Array.Empty<string>(), repeat: true));
+        Assert.IsNull(announcements.Update(0, new[] { "Bob", "Charlie" }, repeat: true));
     }
 
     [TestMethod]

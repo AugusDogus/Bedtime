@@ -6,9 +6,9 @@ namespace Bedtime;
 
 internal sealed class BedAnnouncements
 {
-    private bool _announcedEveryoneAsleep;
+    private string? _lastMessage;
 
-    public string? Update(int inBed, IReadOnlyCollection<string> awakePlayers, bool showAwakePlayers = true)
+    public string? Update(int inBed, IReadOnlyCollection<string> awakePlayers, bool showAwakePlayers = true, bool repeat = false)
     {
         int playerCount = inBed + awakePlayers.Count;
         if (playerCount <= 1 || inBed == 0)
@@ -19,16 +19,11 @@ internal sealed class BedAnnouncements
 
         if (awakePlayers.Count == 0)
         {
-            if (_announcedEveryoneAsleep)
-                return null;
-            _announcedEveryoneAsleep = true;
-            return "Everyone went to sleep. Sweet dreams!";
+            return ChangedMessage("Everyone went to sleep. Sweet dreams!", repeat);
         }
 
-        _announcedEveryoneAsleep = false;
         var message = new StringBuilder();
-        // Vanilla vertically centers notifications. Balance the list with blank lines
-        // above the count so it stays below the hotbar as the list grows downward.
+        // Balance vanilla's vertically centered notification below the hotbar.
         if (showAwakePlayers)
             message.Append('\n', awakePlayers.Count + 1);
         message.Append($"{inBed} of {playerCount} players asleep");
@@ -44,8 +39,15 @@ internal sealed class BedAnnouncements
                 message.Append("\n• ").Append(name);
         }
 
-        // Repeating on vanilla's sleep-update pass refreshes the client's fade.
-        return message.ToString();
+        return ChangedMessage(message.ToString(), repeat);
+    }
+
+    private string? ChangedMessage(string message, bool repeat)
+    {
+        if (!repeat && message == _lastMessage)
+            return null;
+        _lastMessage = message;
+        return message;
     }
 
     private static string DisplayName(string name)
@@ -71,6 +73,6 @@ internal sealed class BedAnnouncements
 
     public void Clear()
     {
-        _announcedEveryoneAsleep = false;
+        _lastMessage = null;
     }
 }

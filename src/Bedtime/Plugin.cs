@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using BepInEx;
 using HarmonyLib;
+using UnityEngine;
 
 namespace Bedtime;
 
@@ -13,6 +14,8 @@ public sealed class Plugin : BaseUnityPlugin
 
     private readonly BedAnnouncements _announcements = new();
     private readonly Harmony _harmony = new(PluginId);
+    private readonly ReplayRequest _replayRequest = new();
+    private bool _replayPending;
     private bool _showAwakePlayers = true;
     private static Plugin? _instance;
 
@@ -24,6 +27,7 @@ public sealed class Plugin : BaseUnityPlugin
             _showAwakePlayers = Config.Bind("Announcements", "ShowAwakePlayers", true,
                 "Show the Not Sleeping list below the bed count. Disable for count-only announcements. Restart the server after changing this setting.").Value;
             _harmony.PatchAll(typeof(SleepUpdatePatch));
+            _harmony.PatchAll(typeof(ChatCommandPatch));
             Logger.LogInfo("Bedtime loaded. Bed announcements run on dedicated servers; vanilla sleep rules are unchanged.");
         }
         catch (Exception error)
@@ -42,6 +46,8 @@ public sealed class Plugin : BaseUnityPlugin
     {
         try
         {
+            bool repeat = _replayPending;
+            _replayPending = false;
             ZNet network = ZNet.instance;
             if (network == null || !network.IsServer() || !network.IsDedicated() || sleeping)
             {
@@ -65,7 +71,7 @@ public sealed class Plugin : BaseUnityPlugin
                     awakePlayers.Add(character.GetString(ZDOVars.s_playerName, "Unknown player"));
             }
 
-            string? message = _announcements.Update(inBed, awakePlayers, _showAwakePlayers);
+            string? message = _announcements.Update(inBed, awakePlayers, _showAwakePlayers, repeat);
             if (message != null)
                 rpc.InvokeRoutedRPC(ZRoutedRpc.Everybody, "ShowMessage", (int)MessageHud.MessageType.TopLeft, message);
         }
@@ -91,6 +97,32 @@ public sealed class Plugin : BaseUnityPlugin
         private static void Prefix(bool ___m_sleeping)
         {
             _instance?.AnnounceBeds(___m_sleeping);
+        }
+    }
+
+    [HarmonyPatch(typeof(ZRoutedRpc), "RPC_RoutedRPC")]
+    private static class ChatCommandPatch
+    {
+        [HarmonyPrefix]
+        private static bool Prefix(ZRpc rpc, ZPackage pkg)
+        {
+            Plugin? plugin = _instance;
+            ZNet network = ZNet.instance;
+            if (plugin == null || network == null || !network.IsServer() || !network.IsDedicated())
+                return true;
+            foreach (ZNetPeer peer in network.GetPeers())
+            {
+                if (peer.m_rpc != rpc || !peer.IsReady())
+                    continue;
+                if (!ChatCommand.IsReplay(pkg, peer.m_uid))
+                    return true;
+                if (plugin._replayRequest.TryAccept(Time.realtimeSinceStartupAsDouble))
+                    plugin._replayPending = true;
+                // The requester already saw their local echo. Do not relay the
+                // command text to other clients, including cooldown duplicates.
+                return false;
+            }
+            return true;
         }
     }
 }

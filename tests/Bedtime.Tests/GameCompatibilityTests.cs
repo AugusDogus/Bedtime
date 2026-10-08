@@ -27,7 +27,7 @@ public sealed class GameCompatibilityTests
             instruction.Operand is string name && name == "UpdateSleeping");
         Assert.AreEqual(2f, sleepSchedule.Next?.Operand);
         Assert.AreEqual(2f, sleepSchedule.Next?.Next?.Operand,
-            "Vanilla's sleep-update interval changed. Review notification refresh timing before releasing.");
+            "Vanilla's sleep-update interval changed. Review announcement timing before releasing.");
         Assert.IsTrue(sleepSchedule.Next?.Next?.Next?.Operand is MethodReference { Name: "InvokeRepeating" });
 
         var sleepCheck = gameType.Methods.Single(method => method.Name == "EverybodyIsTryingToSleep");
@@ -53,5 +53,18 @@ public sealed class GameCompatibilityTests
         Assert.IsTrue(start.Body.Instructions.Any(instruction => instruction.Operand is string text && text == "ShowMessage"));
         Assert.IsTrue(start.Body.Instructions.Any(instruction =>
             instruction.Operand is MethodReference { Name: "RPC_ShowMessage" }));
+
+        TypeDefinition routed = game.MainModule.Types.Single(type => type.FullName == "ZRoutedRpc");
+        var incoming = routed.Methods.Single(method => method.Name == "RPC_RoutedRPC");
+        CollectionAssert.AreEqual(new[] { "ZRpc", "ZPackage" },
+            incoming.Parameters.Select(parameter => parameter.ParameterType.FullName).ToArray());
+        TypeDefinition chat = game.MainModule.Types.Single(type => type.FullName == "Chat");
+        CollectionAssert.AreEqual(new[] { "System.Int64", "UnityEngine.Vector3", "System.Int32", "UserInfo", "System.String" },
+            chat.Methods.Single(method => method.Name == "RPC_ChatMessage").Parameters
+                .Select(parameter => parameter.ParameterType.FullName).ToArray());
+        TypeDefinition talker = game.MainModule.Types.Single(type => type.FullName == "Talker");
+        CollectionAssert.AreEqual(new[] { "System.Int64", "System.Int32", "UserInfo", "System.String" },
+            talker.Methods.Single(method => method.Name == "RPC_Say").Parameters
+                .Select(parameter => parameter.ParameterType.FullName).ToArray());
     }
 }
